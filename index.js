@@ -3,15 +3,8 @@ const express = require('express');
 // Create the serve/app of express
 const app = express();
 
-
-// GET 
-app.get('/', (request, response) => {
-    
-    response.status(200).json({
-        ok: true,
-        msg: 'All good'
-    })
-})
+// Routes
+app.use( '/api/auth', require('./routes/auth') );
 
 
 app.listen( 4000, () => {
