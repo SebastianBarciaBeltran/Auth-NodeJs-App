@@ -1,35 +1,15 @@
 const { Router } = require('express');
+const { createUser, loginUser, renewToken } = require('../controllers/auth')
 
 const router = Router();
 
 // Login of user
-router.post('/', (request, response) => { 
-
-    return response.json({
-        ok: true,
-        msg: 'Logged'
-    })
-
-});
+router.post('/', loginUser);
 
 // JWT
-router.get('/renew', (request, response) => { 
+router.get('/renew', renewToken);
 
-    return response.json({
-        ok: true,
-        msg: 'JWT'
-    })
-
-});
-
-// Create new user
-router.post('/new', (request, response) => { 
-
-    return response.json({
-        ok: true,
-        msg: 'create user /new'
-    })
-
-});
+// Create new user 
+router.post('/new', createUser);
 
 module.exports = router;
