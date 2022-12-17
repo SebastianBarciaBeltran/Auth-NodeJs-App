@@ -1,5 +1,9 @@
+// Imports
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
+
+console.log(process.env);
 
 // Create the serve/app of express
 const app = express();
@@ -14,6 +18,6 @@ app.use( express.json() );
 app.use( '/api/auth', require('./routes/auth') );
 
 
-app.listen( 4000, () => {
-    console.log(`Server running in port ${ 4000 } `)
+app.listen( process.env.PORT, () => {
+    console.log(`Server running in port ${ process.env.PORT } `)
 });
