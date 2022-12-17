@@ -8,6 +8,9 @@ console.log(process.env);
 // Create the serve/app of express
 const app = express();
 
+// public route 
+app.use( express.static('public') );
+
 // Cors
 app.use( cors() );
 
