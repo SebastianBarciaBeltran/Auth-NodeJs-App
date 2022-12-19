@@ -4,7 +4,13 @@ const { validationResult } = require('express-validator');
 const loginUser =  (request, response) => { 
     
     const errors = validationResult(request);
-    console.log(errors);
+
+    if (!errors.isEmpty()) {
+        return response.status(400).json({
+            ok: false,
+            errors: errors.mapped()
+        });
+    }
     
     const { email, password } = request.body;
 
@@ -22,8 +28,15 @@ const renewToken = (request, response) => {
 }
 
 const createUser = (request, response = resp ) => { 
+    const errors = validationResult(request);
     const { name, email, password } = request.body;
-    console.log('createUser:', name, email, password);
+
+    if (!errors.isEmpty()) {
+        return response.status(400).json({
+            ok: false,
+            errors: errors.mapped()
+        });
+    }
 
     return response.json({
         ok: true,
