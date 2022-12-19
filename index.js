@@ -3,8 +3,6 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-console.log(process.env);
-
 // Create the serve/app of express
 const app = express();
 
@@ -18,8 +16,7 @@ app.use( cors() );
 app.use( express.json() );
 
 // Routes
-app.use( '/api/auth', require('./routes/auth') );
-
+app.use( '/api/auth', require('./routes/auth.routes') );
 
 app.listen( process.env.PORT, () => {
     console.log(`Server running in port ${ process.env.PORT } `)

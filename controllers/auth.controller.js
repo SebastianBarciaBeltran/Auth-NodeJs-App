@@ -1,8 +1,13 @@
 const { resp } = require('express');
+const { validationResult } = require('express-validator');
 
 const loginUser =  (request, response) => { 
+    
+    const errors = validationResult(request);
+    console.log(errors);
+    
     const { email, password } = request.body;
-    console.log('login:', email, password);
+
     return response.json({
         ok: true,
         msg: 'Logged'
