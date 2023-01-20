@@ -7,7 +7,7 @@ const router = Router();
 
 // Login of user
 // 'path', middleware, controller 
-router.post('/', [
+router.post('/login', [
     check('email', 'El email es obligatorio').isEmail(), 
     check('password', 'El password es obligatorio y minimo 6 caracteres').isLength({ min: 6}), 
 ], loginUser); 
