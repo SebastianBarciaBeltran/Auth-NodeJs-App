@@ -4,34 +4,54 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const { generateJWT } = require('../helpers/jwt')
 
-const loginUser =  (request, response = response) => { 
-    
-    const errors = validationResult(request);
-
-    if (!errors.isEmpty()) {
-        return response.status(400).json({
-            ok: false,
-            errors: errors.mapped()
-        });
-    }
-    
+const loginUser =  async(request, response = response) => { 
     const { email, password } = request.body;
 
-    return response.json({
-        ok: true,
-        msg: 'Logged'
-    })
-}
+    try {
 
-const renewToken = (request, response = response) => { 
-    return response.json({
-        ok: true,
-        msg: 'JWT'
-    })
+        // Check if email exist 
+        const userDB = await User.findOne({email});
+
+        if (!userDB) {
+            return response.status(400).json({
+                ok: false,
+                msg: "Email doesn't exist"
+            });
+        }
+
+        // CHECK IF THE PASSWORD HAVE MATCH WITH THE PASSWORD IN DB
+        const validPassword = bcrypt.compareSync(password, userDB.password);        
+
+        if (!validPassword) {
+            return response.status(400).json({
+                ok: false,
+                msg: "Incorrect password"
+            });
+        }
+
+        // Generate JWT to send Angular
+        const token = await generateJWT(userDB.id, userDB.name)
+
+        // Response of the services 
+        return response.status(200).json({
+            ok: true,
+            uid: userDB.id,
+            name: userDB.name,
+            token
+        })
+
+        
+
+    } catch (error) {
+        console.log(error);
+        return response.status(500).json({
+            ok: false,
+            msg: 'Please contact to the administration'
+        })   
+    }
 }
 
 const createUser = async(request, response = response ) => { 
-    const errors = validationResult(request);
     const { name, email, password } = request.body;
 
     try {
@@ -54,7 +74,7 @@ const createUser = async(request, response = response ) => {
 
 
         // Generate JWT to send Angular
-        const token = await generateJWT(userDB.id ,name)
+        const token = await generateJWT(userDB.id, name)
 
         // Create User in DB 
         await userDB.save();
@@ -75,12 +95,27 @@ const createUser = async(request, response = response ) => {
             msg: 'Please contact to the administration'
         })
     }
-
-
-
-
 } 
 
+const renewToken = (request, response = response) => { 
+
+    const token = request.header('x-api-key');
+
+
+    if (!token) {
+        return response.status(401).json({
+            ok: false,
+            msg: 'Token error'
+        });
+    }
+
+
+    return response.json({
+        ok: true,
+        msg: 'JWT',
+        token
+    })
+}
 
 module.exports = {
     loginUser,
