@@ -97,14 +97,18 @@ const createUser = async(request, response = express ) => {
     }
 } 
 
-const renewToken = (request, response = express) => { 
-
+const renewToken = async(request, response = express) => { 
+    
     const { uid, name } = request;
+
+    // Generate JWT to send Angular
+    const token = await generateJWT(uid, name)
 
     return response.json({
         ok: true,
         uid,
-        name
+        name,
+        token
     })
 }
 
