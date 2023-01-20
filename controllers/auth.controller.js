@@ -1,10 +1,10 @@
-const { response } = require('express');
+const { express } = require('express');
 const User = require('../models/User');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const { generateJWT } = require('../helpers/jwt')
 
-const loginUser =  async(request, response = response) => { 
+const loginUser =  async(request, response = express) => { 
     const { email, password } = request.body;
 
     try {
@@ -51,7 +51,7 @@ const loginUser =  async(request, response = response) => {
     }
 }
 
-const createUser = async(request, response = response ) => { 
+const createUser = async(request, response = express ) => { 
     const { name, email, password } = request.body;
 
     try {
@@ -97,23 +97,14 @@ const createUser = async(request, response = response ) => {
     }
 } 
 
-const renewToken = (request, response = response) => { 
+const renewToken = (request, response = express) => { 
 
-    const token = request.header('x-api-key');
-
-
-    if (!token) {
-        return response.status(401).json({
-            ok: false,
-            msg: 'Token error'
-        });
-    }
-
+    const { uid, name } = request;
 
     return response.json({
         ok: true,
-        msg: 'JWT',
-        token
+        uid,
+        name
     })
 }
 

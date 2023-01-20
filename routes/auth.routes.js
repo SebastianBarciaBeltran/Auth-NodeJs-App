@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { createUser, loginUser, renewToken } = require('../controllers/auth.controller');
 const { check } = require('express-validator');
+const { validateJWT } = require('../middlewares/validate-jwt');
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.post('/', [
 ], loginUser); 
     
 // JWT
-router.get('/renew', renewToken);
+router.get('/renew', validateJWT ,renewToken);
 
 // Create new user 
 router.post('/new', 
