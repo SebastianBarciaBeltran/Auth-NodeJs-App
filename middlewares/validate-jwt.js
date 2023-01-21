@@ -12,14 +12,9 @@ const validateJWT = (request, response = express, next) => {
         });
     }
 
-
     try {
-        const {uid, name, email } =  jwt.verify(token, process.env.SECRET_JWT_SEED);
-
+        const {uid} =  jwt.verify(token, process.env.SECRET_JWT_SEED);
         request.uid = uid;
-        request.name = name;
-        request.email = email;
-        
     } catch (error) {
         console.log(error);
         return response.status(401).json({
