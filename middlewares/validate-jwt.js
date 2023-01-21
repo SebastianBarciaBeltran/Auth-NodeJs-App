@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const validateJWT = (request, response = express, next) => {
 
-    const token = request.header('x-tonken');
+    const token = request.header('x-token');
 
     if (!token) {
         return response.status(401).json({
@@ -14,10 +14,11 @@ const validateJWT = (request, response = express, next) => {
 
 
     try {
-        const {uid, name } =  jwt.verify(token, process.env.SECRET_JWT_SEED);
+        const {uid, name, email } =  jwt.verify(token, process.env.SECRET_JWT_SEED);
 
         request.uid = uid;
         request.name = name;
+        request.email = email;
         
     } catch (error) {
         console.log(error);

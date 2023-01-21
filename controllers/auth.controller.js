@@ -30,13 +30,14 @@ const loginUser =  async(request, response = express) => {
         }
 
         // Generate JWT to send Angular
-        const token = await generateJWT(userDB.id, userDB.name)
+        const token = await generateJWT(userDB.id, userDB.name, userDB.email)
 
         // Response of the services 
         return response.status(200).json({
             ok: true,
             uid: userDB.id,
             name: userDB.name,
+            email: userDB.email,
             token
         })
 
@@ -74,7 +75,7 @@ const createUser = async(request, response = express ) => {
 
 
         // Generate JWT to send Angular
-        const token = await generateJWT(userDB.id, name)
+        const token = await generateJWT(userDB.id, name, userDB.email)
 
         // Create User in DB 
         await userDB.save();
@@ -84,6 +85,7 @@ const createUser = async(request, response = express ) => {
             ok: true,
             uid: userDB.id,
             name,
+            email: userDB.email,
             token
         });
 
@@ -99,15 +101,16 @@ const createUser = async(request, response = express ) => {
 
 const renewToken = async(request, response = express) => { 
     
-    const { uid, name } = request;
+    const { uid, name, email } = request;
 
     // Generate JWT to send Angular
-    const token = await generateJWT(uid, name)
+    const token = await generateJWT(uid, name, email)
 
     return response.json({
         ok: true,
         uid,
         name,
+        email,
         token
     })
 }
